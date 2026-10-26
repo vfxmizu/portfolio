@@ -12,6 +12,8 @@
                  Required for mp4. Optional for YouTube (fetched automatically).
      vertical  : OPTIONAL. true for 9:16 videos.
      note      : OPTIONAL. Short description under the title.
+     sensitive : OPTIONAL. true = thumbnail is blurred with a "Click to reveal" overlay until the
+                 visitor clicks once (the next click opens the player). Omit for normal videos.
 
    MP4 files load only when the visitor clicks a card (preload="none").
    See README.md for the ffmpeg command used to prepare web-friendly files.

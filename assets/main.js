@@ -34,6 +34,29 @@
   }
   function el(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text) n.textContent = text; return n; }
 
+  /* ---- sensitive content: blurred until the visitor clicks the card once (remembered per session) ---- */
+  var REVEAL_KEY = 'mizu-revealed';
+  function keyOf(v) { return (v.platform || 'mp4') + ':' + (v.src || v.id || v.title); }
+  function loadRevealed() {
+    try { var a = JSON.parse(sessionStorage.getItem(REVEAL_KEY) || '[]'); return Array.isArray(a) ? a : []; } catch (e) { return []; }
+  }
+  var revealed = loadRevealed();
+  function isSensitive(v) { return v.sensitive === true; }
+  function isRevealed(v) { return !isSensitive(v) || revealed.indexOf(keyOf(v)) >= 0; }
+  function markRevealed(v) {
+    var k = keyOf(v);
+    if (revealed.indexOf(k) < 0) revealed.push(k);
+    try { sessionStorage.setItem(REVEAL_KEY, JSON.stringify(revealed)); } catch (e) {}
+  }
+  var live = el('div', 'sr-only'); live.setAttribute('role', 'status'); live.setAttribute('aria-live', 'polite');
+  document.body.appendChild(live);
+  var EYE = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M1.5 12S5.5 5 12 5s10.5 7 10.5 7-4 7-10.5 7S1.5 12 1.5 12z"/><circle cx="12" cy="12" r="3.2"/></svg>';
+  function cardLabel(v, ph) {
+    if (ph) return v.title + ' (placeholder, no video yet)';
+    if (!isRevealed(v)) return 'Sensitive content: ' + v.title + '. Press to reveal the thumbnail';
+    return 'Play video: ' + v.title + (isSensitive(v) ? ' (sensitive content)' : '');
+  }
+
   function visible() { return videos.filter(function (v) { return active === 'All' || v.category === active; }); }
 
   function renderFilters() {
@@ -60,7 +83,11 @@
       var card = el('button', 'vcard reveal' + (v.vertical ? ' vertical' : '') + (ph ? ' is-placeholder' : ''));
       card.type = 'button';
       card.style.setProperty('--d', (i % 3) * 0.08 + 's');
-      card.setAttribute('aria-label', ph ? v.title + ' (placeholder, no video yet)' : 'Play video: ' + v.title);
+      card.setAttribute('aria-label', cardLabel(v, ph));
+      if (isSensitive(v) && !ph) {
+        card.classList.add('sensitive');
+        if (isRevealed(v)) card.classList.add('revealed');
+      }
 
       var t = el('div', 'vthumb');
       var src = thumbFor(v);
@@ -76,6 +103,12 @@
       }
       if (ph) t.appendChild(el('span', 'badge ph', 'Placeholder'));
       t.appendChild(el('span', 'play'));
+      if (isSensitive(v) && !ph) {
+        var sb = el('span', 'sens-badge');
+        sb.innerHTML = EYE;
+        sb.appendChild(el('span', '', 'Click to reveal'));
+        t.appendChild(sb);
+      }
       card.appendChild(t);
 
       var m = el('div', 'vmeta');
@@ -84,7 +117,16 @@
       if (v.note) m.appendChild(el('p', '', v.note));
       card.appendChild(m);
 
-      if (!ph) card.addEventListener('click', function () { openModal(v, card); });
+      if (!ph) card.addEventListener('click', function () {
+        if (!isRevealed(v)) { // first click only reveals this card; it never opens the player
+          markRevealed(v);
+          card.classList.add('revealed');
+          card.setAttribute('aria-label', cardLabel(v, false));
+          live.textContent = 'Thumbnail revealed: ' + v.title + '. Press again to play.';
+          return;
+        }
+        openModal(v, card);
+      });
       grid.appendChild(card);
       observe(card);
     });
@@ -94,13 +136,14 @@
   var modal = $('#modal'), frame = $('#modal-frame'), mtitle = $('#modal-title');
   var lastFocus = null, current = null;
 
-  function playable() { return visible().filter(function (v) { return !isPlaceholder(v); }); }
+  function playable() { return visible().filter(function (v) { return !isPlaceholder(v) && isRevealed(v); }); }
   function clearFrame() {
     var o = frame.querySelector('video');
     if (o) { o.pause(); o.removeAttribute('src'); o.load(); }
     frame.innerHTML = '';
   }
   function load(v) {
+    if (!isRevealed(v)) return; // never show a sensitive video (or its poster) before it has been revealed
     current = v;
     clearFrame();
     frame.classList.toggle('vertical', !!v.vertical);
@@ -124,6 +167,7 @@
     $('#modal-prev').style.display = $('#modal-next').style.display = many ? '' : 'none';
   }
   function openModal(v, opener) {
+    if (!isRevealed(v)) return;
     lastFocus = opener; load(v);
     modal.hidden = false; document.body.style.overflow = 'hidden';
     $('.modal-close').focus();

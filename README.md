@@ -51,6 +51,13 @@ Open `assets/videos.js` and edit the `window.VIDEOS` array. One entry per video.
 - YouTube thumbs load automatically; for a custom one (or any Vimeo video) set `thumb`.
 - Embeds are only loaded on click (privacy-friendly `youtube-nocookie.com`).
 - **Categories** are free text. Filter buttons are generated automatically and hidden while there is only one category.
+- **Sensitive content** (optional): add `sensitive: true` to an entry and its card thumbnail is blurred heavily, with a "Click to reveal" overlay (eye icon). The first click on that card only removes the blur (that card only, remembered for the browser session via `sessionStorage`) and does **not** open the player; the next click plays the video. The player can never open on a still-blurred card, and prev/next in the player skip videos that have not been revealed. Keyboard works (Enter/Space) and screen readers hear "Sensitive content: <title>" on the card. Example:
+
+  ```js
+  { title: "Fashion Ad", category: "Ads", platform: "mp4", src: "assets/videos/ad-06.mp4", thumb: "assets/thumbs/ad-06.jpg", vertical: true, sensitive: true }
+  ```
+
+  Leave the field out (or `false`) for normal videos.
 - Entries with an ID starting `YOUR_` (or an mp4 entry without `src`) are placeholders: they show a "Placeholder" badge and don't play.
 
 ## Other things to personalize
