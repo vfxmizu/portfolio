@@ -22,5 +22,6 @@ window.VIDEOS = [
   { title: "Nutra ED", category: "Ads", platform: "mp4", src: "assets/videos/ad-02.mp4", thumb: "assets/thumbs/ad-02.jpg", vertical: true, sensitive: true },
   { title: "Nutra ED", category: "Ads", platform: "mp4", src: "assets/videos/ad-01.mp4", thumb: "assets/thumbs/ad-01.jpg", vertical: true, sensitive: true },
   { title: "Nutra Wellness", category: "Ads", platform: "mp4", src: "assets/videos/ad-03.mp4", thumb: "assets/thumbs/ad-03.jpg", vertical: true },
-  { title: "Nutra Wellness", category: "Ads", platform: "mp4", src: "assets/videos/ad-04.mp4", thumb: "assets/thumbs/ad-04.jpg", vertical: true }
+  { title: "Nutra Wellness", category: "Ads", platform: "mp4", src: "assets/videos/ad-04.mp4", thumb: "assets/thumbs/ad-04.jpg", vertical: true },
+  { title: "Infoproduct PP", category: "Ads", platform: "mp4", src: "assets/videos/infoproduct-pp.mp4", thumb: "assets/thumbs/infoproduct-pp.jpg", vertical: true }
 ];
