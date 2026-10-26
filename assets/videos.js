@@ -26,8 +26,8 @@ window.VIDEOS = [
   { title: "Nutra Wellness", category: "Ads", platform: "mp4", src: "assets/videos/ad-03.mp4", thumb: "assets/thumbs/ad-03.jpg", vertical: true },
   { title: "Nutra Wellness", category: "Ads", platform: "mp4", src: "assets/videos/ad-04.mp4", thumb: "assets/thumbs/ad-04.jpg", vertical: true },
   { title: "Infoproduct PP", category: "Ads", platform: "mp4", src: "assets/videos/infoproduct-pp.mp4", thumb: "assets/thumbs/infoproduct-pp.jpg", vertical: true },
-  { title: "VSL", category: "Ads", platform: "drive", id: "1-sGTVCIxj-Bo5BWzD1IolUj4SvXzqqiY" },
-  { title: "VSL", category: "Ads", platform: "drive", id: "19Iqf_ydAWehvzQXjO2T-3xe9EczUBP-r" },
-  { title: "VSL ED", category: "Ads", platform: "drive", id: "1aj0h1UzOvMMRL2DdEcenG7Es44K6y2sM", sensitive: true },
-  { title: "VSL", category: "Ads", platform: "drive", id: "1yllaS9DDxBIqWgwlKUHEMPe0dgQv-VSM" }
+  { title: "VSL", category: "VSL", platform: "drive", id: "1-sGTVCIxj-Bo5BWzD1IolUj4SvXzqqiY" },
+  { title: "VSL", category: "VSL", platform: "drive", id: "19Iqf_ydAWehvzQXjO2T-3xe9EczUBP-r" },
+  { title: "VSL ED", category: "VSL", platform: "drive", id: "1aj0h1UzOvMMRL2DdEcenG7Es44K6y2sM", sensitive: true },
+  { title: "VSL", category: "VSL", platform: "drive", id: "1yllaS9DDxBIqWgwlKUHEMPe0dgQv-VSM" }
 ];
