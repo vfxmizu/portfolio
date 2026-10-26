@@ -58,6 +58,27 @@ Open `assets/videos.js` and edit the `window.VIDEOS` array. One entry per video.
   ```
 
   Leave the field out (or `false`) for normal videos.
+**Google Drive videos (hosted on Drive, played in the site's modal):**
+
+```js
+{ title: "Skincare Ad", category: "Ads", platform: "drive", id: "1AbCdEfGhIjKlMnOpQrStUvWxYz012345", vertical: true },
+{ title: "Brand Film",  category: "Motion & VFX", platform: "drive", id: "1AbCdEfGhIjKlMnOpQrStUvWxYz067890", thumb: "assets/thumbs/brand-film.jpg", sensitive: true }
+```
+
+1. **Share the file publicly**: in Drive, right click the video → *Share* → *General access* → **Anyone with the link**, role **Viewer** → *Done*. If it stays *Restricted*, visitors see a "You need access" / sign-in page and the thumbnail does not load.
+2. **Get the ID** from the share link: `https://drive.google.com/file/d/`**`THIS_PART`**`/view?usp=sharing` (also accepted by the uploader app: `/open?id=ID`, `uc?id=ID`, `/u/0/` links).
+3. **Add the entry** to `assets/videos.js` as above (`platform: "drive"`, `id`). `vertical: true` (9:16) and `sensitive: true` work exactly like for the other platforms, including the blurred Drive thumbnail.
+4. **Thumbnail**: if `thumb` is left out, the card uses `https://drive.google.com/thumbnail?id=<id>&sz=w720` (lazy-loaded; works for files shared with the link). If it cannot be loaded (not shared, still processing, Drive hiccup) the card falls back to a dark placeholder with the play icon, and the video still plays. A local `thumb` image (like the MP4 entries) is more reliable and avoids a request to Google just to draw the grid.
+5. **Player**: the iframe `https://drive.google.com/file/d/<id>/preview` (`allow="autoplay; fullscreen"`) is created only when the card is clicked and removed on close, prev/next or Esc. No `sandbox` and no `referrerpolicy` are set on purpose (both can break Google's player).
+
+Drive caveats:
+
+- Drive is not a video CDN. A heavily viewed file can show **"Download quota exceeded"** / "too many users viewed" for a while. If that happens, make a copy of the file in Drive and use the copy's ID (or host that video as MP4/YouTube).
+- Look, controls and branding are **Google's** (title bar, "open in new window" button, quality menu). They cannot be changed from the site.
+- Freshly uploaded videos show "still processing" for a few minutes. MP4 (H.264) is the safest format; MOV/MKV may fail to stream.
+- Browsers that block third-party cookies (Safari, Brave, some mobile modes) or visitors signed into several Google accounts can occasionally get a Drive error/sign-in screen inside the player; reloading or opening in a private window usually fixes it. Autoplay may be blocked on some phones, in which case the visitor taps the Drive play button.
+- Keyboard arrows and Esc work while focus is on the site's modal buttons; once the visitor clicks inside Google's player, key presses go to the player (use the ‹ › and × buttons).
+
 - Entries with an ID starting `YOUR_` (or an mp4 entry without `src`) are placeholders: they show a "Placeholder" badge and don't play.
 
 ## Other things to personalize

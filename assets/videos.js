@@ -5,15 +5,17 @@
      title     : shown on the card and in the player
      category  : any text, e.g. "Ads" | "VSL" | "Motion & VFX". Filter chips are built
                  automatically and are hidden when there is only one category.
-     platform  : "mp4" (self-hosted file) | "youtube" | "vimeo"
+     platform  : "mp4" (self-hosted file) | "youtube" | "vimeo" | "drive" (Google Drive)
      src       : (mp4 only) path to the file, e.g. "assets/videos/ad-05.mp4"
-     id        : (youtube / vimeo) the video ID
+     id        : (youtube / vimeo / drive) the video ID (Drive: the file ID from the share link)
      thumb     : thumbnail / poster image path or URL, e.g. "assets/thumbs/ad-05.jpg".
-                 Required for mp4. Optional for YouTube (fetched automatically).
+                 Required for mp4. Optional for YouTube and Drive (fetched automatically).
      vertical  : OPTIONAL. true for 9:16 videos.
      note      : OPTIONAL. Short description under the title.
      sensitive : OPTIONAL. true = thumbnail is blurred with a "Click to reveal" overlay until the
                  visitor clicks once (the next click opens the player). Omit for normal videos.
+
+   Drive files must be shared as "Anyone with the link: Viewer". See README.md ("Google Drive videos").
 
    MP4 files load only when the visitor clicks a card (preload="none").
    See README.md for the ffmpeg command used to prepare web-friendly files.

@@ -23,12 +23,15 @@
 
   function isMp4(v) { return v.platform === 'mp4' || (!!v.src && !v.id); }
   function isPlaceholder(v) { if (isMp4(v)) return !v.src; return !v.id || /^YOUR_/i.test(v.id); }
+  function isDrive(v) { return v.platform === 'drive'; }
   function thumbFor(v) {
     if (v.thumb) return v.thumb;
+    if (isDrive(v) && !isPlaceholder(v)) return 'https://drive.google.com/thumbnail?id=' + encodeURIComponent(v.id) + '&sz=w720';
     if (v.platform === 'youtube' && !isPlaceholder(v)) return 'https://i.ytimg.com/vi/' + encodeURIComponent(v.id) + '/hqdefault.jpg';
     return '';
   }
   function embedUrl(v) {
+    if (isDrive(v)) return 'https://drive.google.com/file/d/' + encodeURIComponent(v.id) + '/preview';
     if (v.platform === 'vimeo') return 'https://player.vimeo.com/video/' + encodeURIComponent(v.id) + '?autoplay=1&dnt=1';
     return 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(v.id) + '?autoplay=1&rel=0';
   }
@@ -95,7 +98,7 @@
         var img = new Image();
         img.loading = 'lazy'; img.decoding = 'async'; img.alt = '';
         img.src = src;
-        img.addEventListener('error', function () { img.remove(); t.insertBefore(el('div', 'ph-art'), t.firstChild).appendChild(el('span', '', 'No thumbnail')); });
+        img.addEventListener('error', function () { img.remove(); t.insertBefore(el('div', 'ph-art'), t.firstChild).appendChild(el('span', '', isDrive(v) ? '' : 'No thumbnail')); });
         t.appendChild(img);
       } else {
         var art = el('div', 'ph-art'); art.appendChild(el('span', '', ph ? 'Your video here' : v.category || 'Video'));
@@ -157,8 +160,10 @@
       var pr = vid.play(); if (pr && pr.catch) pr.catch(function () {});
     } else {
       var f = document.createElement('iframe');
-      f.src = embedUrl(v); f.title = v.title;
-      f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen';
+      f.title = v.title;
+      f.allow = isDrive(v) ? 'autoplay; fullscreen' : 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen';
+      f.loading = 'lazy'; // Drive: no sandbox and default referrer policy on purpose (both can break the Drive player)
+      f.src = embedUrl(v);
       f.allowFullscreen = true;
       frame.appendChild(f);
     }
