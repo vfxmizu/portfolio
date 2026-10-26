@@ -33,7 +33,7 @@ Open `assets/videos.js` and edit the `window.VIDEOS` array. One entry per video:
 ## Other things to personalize
 
 - **About photo/logo**: in `index.html`, replace the `about-placeholder` block with `<img src="assets/mizu.jpg" alt="Mizu">`.
-- **Social image**: replace `assets/og-image.png` (1200×630). Once you have a final domain, change `og:image` (and optionally add `og:url`) to absolute URLs for best results on social platforms.
+- **Social image**: replace `assets/og-image.png` (1200×630). The social/SEO tags in `index.html` use absolute URLs for `https://vfxmizu.github.io/portfolio/`: `<link rel="canonical">`, `og:url`, `og:image`, `twitter:image` and the JSON-LD `url`. **When moving to a custom domain or VPS, update all of them to the new domain** (e.g. `https://yourdomain.com/`), otherwise link previews and search engines will keep pointing at the GitHub Pages URL.
 - **Colors**: CSS variables at the top of `assets/style.css` (`--red`, `--orange`, `--green`).
 
 ## Preview locally
